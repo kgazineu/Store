@@ -7,13 +7,14 @@ This repository contains a simple CRUD project built using Java Spring. The aim 
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
 - [Database](#database)
+- [Docker](#docker)
 
 ## Installation
 
 1. Clone the repository:
 
 ```bash
-$ git clone https://github.com/kgazineu/
+$ git clone https://github.com/kgazineu/Store.git
 ```
 
 2. Install dependencies with Maven
