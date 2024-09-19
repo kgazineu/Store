@@ -4,7 +4,7 @@ This repository contains a simple CRUD project built using Java Spring. The aim 
 ## Table of Contents
 
 - [Installation](#installation)
-- [Configuration](#configuration)
+- [Usage](#usage)
 - [API Endpoints](#api-endpoints)
 - [Database](#database)
 
