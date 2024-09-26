@@ -4,7 +4,6 @@ import com.example.shop.dto.user.UserLoginRequestDTO;
 import com.example.shop.dto.user.UserRequestDTO;
 import com.example.shop.models.UserModel;
 import com.example.shop.repositories.UserRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +24,7 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid UserLoginRequestDTO body) {
+    public ResponseEntity login(@RequestBody UserLoginRequestDTO body) {
         var userPassword = new UsernamePasswordAuthenticationToken(body.email(), body.password());
         var auth = this.authenticationManager.authenticate(userPassword);
 
@@ -33,13 +32,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid UserRequestDTO body) {
+    public ResponseEntity register(@RequestBody UserRequestDTO body) {
         if(this.userRepository.findByEmail(body.email()) != null) {
             return ResponseEntity.badRequest().build();
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(body.password());
-        UserModel newUser = new UserModel(body.email(), encryptedPassword, body.role());
+        UserModel newUser = new UserModel(body.name(), body.email(), encryptedPassword, body.role());
 
         this.userRepository.save(newUser);
 

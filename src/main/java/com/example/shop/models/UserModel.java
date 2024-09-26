@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity (name="users")
-@Table(name="TB_USERS")
+@Table(name="users")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class UserModel implements UserDetails {
     private String password;
     private UserRole role;
 
-    public UserModel(String name, String email, UserRole role) {
+    public UserModel(String name, String email, String password, UserRole role) {
         this.name = name;
         this.email = email;
         this.password = password;
