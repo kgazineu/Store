@@ -1,7 +1,7 @@
 package com.example.shop.controller;
 
-import com.example.shop.dto.ProductRequestDTO;
-import com.example.shop.dto.ProductResponseDTO;
+import com.example.shop.dto.product.ProductRequestDTO;
+import com.example.shop.dto.product.ProductResponseDTO;
 import com.example.shop.models.ProductModel;
 import com.example.shop.repositories.ProductRepository;
 import jakarta.validation.Valid;

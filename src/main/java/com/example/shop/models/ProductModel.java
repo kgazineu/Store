@@ -1,17 +1,15 @@
 package com.example.shop.models;
 
-import com.example.shop.dto.ProductRequestDTO;
+import com.example.shop.dto.product.ProductRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "product")
-@Entity(name = "TB_PRODUCTS")
+@Table(name = "product") @Entity(name = "TB_PRODUCTS")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class ProductModel{
     @Id
