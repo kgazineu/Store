@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-//  corrente de filtro que aplica as requisições para fazer a segurança da aplicação uma peneira de segurança
+//  corrente de filtro que aplica as requisições para fazer a segurança da aplicação (uma peneira de segurança)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

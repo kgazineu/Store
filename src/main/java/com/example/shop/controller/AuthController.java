@@ -2,9 +2,12 @@ package com.example.shop.controller;
 
 import com.example.shop.dto.user.UserLoginRequestDTO;
 import com.example.shop.dto.user.UserRequestDTO;
+import com.example.shop.dto.user.UserResponseDTO;
+import com.example.shop.infra.security.TokenService;
 import com.example.shop.models.UserModel;
 import com.example.shop.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,25 +26,41 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserLoginRequestDTO body) {
-        var userPassword = new UsernamePasswordAuthenticationToken(body.email(), body.password());
-        var auth = this.authenticationManager.authenticate(userPassword);
+        try {
+            UserModel user = this.userRepository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
+            var auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user, body.password()));
+            if (auth != null) {
+                String token = this.tokenService.generateToken(user);
+                return ResponseEntity.ok(UserResponseDTO.forLogin(user, token));
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong Password");
 
-        return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserRequestDTO body) {
-        if(this.userRepository.findByEmail(body.email()) != null) {
-            return ResponseEntity.badRequest().build();
+        try {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(body.password());
+            UserModel newUser = new UserModel(body.name(), body.email(), encryptedPassword, body.role());
+            this.userRepository.save(newUser);
+
+            return ResponseEntity.ok(UserResponseDTO.forRegister(newUser));
+
+        } catch (RuntimeException e) {
+            if(this.userRepository.findByEmail(body.email()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists");
+            }
+
         }
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(body.password());
-        UserModel newUser = new UserModel(body.name(), body.email(), encryptedPassword, body.role());
-
-        this.userRepository.save(newUser);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server Error");
     }
+
 }
